@@ -1,25 +1,26 @@
 YOSYS_ICESUGAR_NANO_OPT=-DICE_SUGAR_NANO -q -p "synth_ice40 -relut -top $(PROJECTNAME) -json $(PROJECTNAME).json"
 NEXTPNR_ICESUGAR_NANO_OPT=--force --json $(PROJECTNAME).json --pcf BOARDS/icesugar_nano.pcf --asc $(PROJECTNAME).asc \
-                       --freq 12 --lp1k --package cm36
+                       --freq 12 --lp1k --package cm36 --opt-timing
 
 #######################################################################################################################
 
-ICESUGAR_NANO: ICESUGAR_NANO.firmware_config ICESUGAR_NANO.synth ICESUGAR_NANO.prog 
+icesugar_nano: icesugar_nano.firmware_config icesugar_nano.synth icesugar_nano.prog 
 
-ICESUGAR_NANO.synth: FIRMWARE/firmware.hex 
-	TOOLS/make_config.sh -DICE_SUGAR_NANO
+icesugar_nano.synth:
 	yosys $(YOSYS_ICESUGAR_NANO_OPT) $(VERILOGS)
 	nextpnr-ice40 $(NEXTPNR_ICESUGAR_NANO_OPT)
 	icetime -p BOARDS/icesugar_nano.pcf -P cm36 -r $(PROJECTNAME).timings -d lp1k -t $(PROJECTNAME).asc
 	icepack -s $(PROJECTNAME).asc $(PROJECTNAME).bin
 
-ICESUGAR_NANO.show: FIRMWARE/firmware.hex 
+icesugar_nano.show: 
 	yosys $(YOSYS_ICESUGAR_NANO_OPT) $(VERILOGS)
 	nextpnr-ice40 $(NEXTPNR_ICESUGAR_NANO_OPT) --gui
 
-ICESUGAR_NANO.prog:
-	icesprog $(PROJECTNAME).bin
+icesugar_nano.prog:
+	# doesn't work yet
+	iceprog -d "i:0x1d50:0x602b" $(PROJECTNAME).bin
 
-ICESUGAR_NANO.firmware_config:
-	BOARD=icesugar_nano TOOLS/make_config.sh -DICE_SUGAR_NANO
+
+icesugar_nano.firmware_config:
+	BOARD=icesugar_nano TOOLS/make_config.sh -DICE_SUGAR_NANO 
 	(cd FIRMWARE; make libs)

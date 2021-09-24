@@ -3,6 +3,10 @@
 # Note: this file is getting much more complicated than I wished,
 # but it makes life easier by automating different things.
 
+# TODO : double-check this
+ARCH=rv32i
+ABI=ilp32
+OPTIMIZE=-Os
 
 #####################################################################
 # Base directory of the firmware

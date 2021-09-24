@@ -41,58 +41,84 @@
 
 /*************************************************************************************/
 
+`ifdef RV_DEBUG_ICESUGAR_NANO
+module led_blink(  
+					 input  clk,
+                output led
+                );
+   reg [25:0] 			  counter;
+   assign led = ~counter[23];
+
+   initial begin
+      counter = 0;
+   end
+
+   always @(posedge clk)
+     begin
+        counter <= counter + 1;
+     end
+endmodule
+`endif //  `ifdef RV_DEBUG_ICESUGAR_NANO
+
+
+/*************************************************************************************/
+
 module femtosoc(
 `ifdef NRV_IO_LEDS
  `ifdef FOMU
-   output rgb0,rgb1,rgb2,
+					 output rgb0,rgb1,rgb2,
  `else
-   output D1,D2,D3,D4,D5,
+					 output D1,D2,D3,D4,D5,
  `endif
 `endif	      
 `ifdef NRV_IO_SSD1351_1331	      
-   output oled_DIN, oled_CLK, oled_CS, oled_DC, oled_RST,
+					 output oled_DIN, oled_CLK, oled_CS, oled_DC, oled_RST,
 `endif
 `ifdef NRV_IO_UART
-   input  RXD,
-   output TXD,
+					 input  RXD,
+					 output TXD,
 `endif	      
 `ifdef NRV_IO_MAX7219	   
-   output ledmtx_DIN, ledmtx_CS, ledmtx_CLK,
+					 output ledmtx_DIN, ledmtx_CS, ledmtx_CLK,
 `endif
 `ifdef NRV_SPI_FLASH
-   inout spi_mosi, inout spi_miso, output spi_cs_n,
+					 inout spi_mosi, inout spi_miso, output spi_cs_n,
  `ifndef ULX3S	
-   output spi_clk, // ULX3S has spi clk shared with ESP32, using USRMCLK (below)	
+					 output spi_clk, // ULX3S has spi clk shared with ESP32, using USRMCLK (below)	
  `endif
 `endif
 `ifdef NRV_IO_SDCARD
-   output sd_mosi, input sd_miso, output sd_cs_n, output sd_clk,
+					 output sd_mosi, input sd_miso, output sd_cs_n, output sd_clk,
 `endif
 `ifdef NRV_IO_BUTTONS
    `ifdef ICE_FEATHER
-      input [3:0] buttons, 
+					 input [3:0] buttons, 
    `else
-      input [5:0] buttons,
+					 input [5:0] buttons,
    `endif		
 `endif
 `ifdef ULX3S
-   output wifi_en,		
+					 output wifi_en,		
 `endif		
    input  RESET,
 `ifdef FOMU
-   output usb_dp, usb_dn, usb_dp_pu, 
+					 output usb_dp, usb_dn, usb_dp_pu, 
 `endif
 `ifdef NRV_IO_FGA		
-   output [3:0] gpdi_dp,
+					 output [3:0] gpdi_dp,
 `endif
 `ifdef NRV_IO_IRDA
-   output irda_TXD,
-   input  irda_RXD,
-   output irda_SD,		
-`endif   		
-   input pclk
+					 output irda_TXD,
+					 input  irda_RXD,
+					 output irda_SD,		
+`endif
+`ifdef RV_DEBUG_ICESUGAR_NANO
+					 output board_led,
+`endif
+					 input pclk
 );
 
+	
 /********************* Technicalities **************************************/
    
 // On the ULX3S, deactivate the ESP32 so that it does not interfere with 
@@ -603,5 +629,16 @@ end
     );
  `endif
 `endif
-   
+
+	/* ****************************** RV DEBUG iCESugar-nano ****************************** */
+	/* for debugging purposes */
+`ifdef RV_DEBUG_ICESUGAR_NANO
+	led_blink 
+	  my_debug_led(
+						.clk(pclk),     // clock signal
+						.led(board_led) // yellow led in the icesugar-nano board v1.2
+						);
+`endif
+	/* ************************************************************************************* */
+	
 endmodule

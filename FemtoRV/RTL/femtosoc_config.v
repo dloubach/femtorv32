@@ -8,6 +8,10 @@
 `include "CONFIGS/icestick_config.v"
 `endif
 
+`ifdef ICE_SUGAR_NANO
+`include "CONFIGS/icesugar_nano_config.v"
+`endif
+
 `ifdef ICE_BREAKER
 `include "CONFIGS/icebreaker_config.v"
 `endif

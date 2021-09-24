@@ -21,7 +21,7 @@ include BOARDS/arty35_yosys_nextpnr.mk
 ################################################################################
 
 all:
-	@echo "make one of ICESTICK, ICEFEATHER, ULX3S... (or .synth / .prog)"
+	@echo "make one of icesugar-nano, ICESTICK, ICEFEATHER, ULX3S... (or .synth / .prog)"
 
 clean:
 	rm -f *.timings *.asc *.bin *.bit *config *.json *.svf \

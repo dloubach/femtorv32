@@ -35,17 +35,17 @@
 `define NRV_OPTIMIZE "-Os"
 
 module FemtoRV32(
-   input 	 clk,
+   input 	     clk,
 
    output [31:0] mem_addr,  // address bus
    output [31:0] mem_wdata, // data to be written
    output [3:0]  mem_wmask, // write mask for the 4 bytes of each word
-   input [31:0]  mem_rdata, // input lines for both data and instr
-   output 	 mem_rstrb, // active to initiate memory read (used by IO)
-   input 	 mem_rbusy, // asserted if memory is busy reading value
-   input 	 mem_wbusy, // asserted if memory is busy writing value
+   input  [31:0] mem_rdata, // input lines for both data and instr
+   output 	     mem_rstrb, // active to initiate memory read (used by IO)
+   input 	     mem_rbusy, // asserted if memory is busy reading value
+   input 	     mem_wbusy, // asserted if memory is busy writing value
 
-   input 	 reset      // set to 0 to reset the processor
+   input 	     reset      // set to 0 to reset the processor
 );
 
    parameter RESET_ADDR       = 32'h00000000; 
@@ -53,30 +53,30 @@ module FemtoRV32(
 
    localparam ADDR_PAD = {(32-ADDR_WIDTH){1'b0}}; // 32-bits padding for addrs
 
- /***************************************************************************/
- // Instruction decoding.
- /***************************************************************************/
+	/***************************************************************************/
+	// Instruction decoding.
+	/***************************************************************************/
 
- // Extracts rd,rs1,rs2,funct3,imm and opcode from instruction. 
- // Reference: Table page 104 of:
- // https://content.riscv.org/wp-content/uploads/2017/05/riscv-spec-v2.2.pdf
+	// Extracts rd,rs1,rs2,funct3,imm and opcode from instruction. 
+	// Reference: Table page 104 of:
+	// https://content.riscv.org/wp-content/uploads/2017/05/riscv-spec-v2.2.pdf
 
- // The destination register
- wire [4:0] rdId = instr[11:7];
+	// The destination register
+	wire [4:0] 	  rdId = instr[11:7];
 
- // The ALU function, decoded in 1-hot form (doing so reduces LUT count)
- // It is used as follows: funct3Is[val] <=> funct3 == val
- (* onehot *)
- wire [7:0] funct3Is = 8'b00000001 << instr[14:12];
+	// The ALU function, decoded in 1-hot form (doing so reduces LUT count)
+	// It is used as follows: funct3Is[val] <=> funct3 == val
+	(* onehot *)
+	wire [7:0] 	  funct3Is = 8'b00000001 << instr[14:12];
 
- // The five immediate formats, see RiscV reference (link above), Fig. 2.4 p. 12
- wire [31:0] Uimm = {    instr[31],   instr[30:12], {12{1'b0}}};
- wire [31:0] Iimm = {{21{instr[31]}}, instr[30:20]};
- /* verilator lint_off UNUSED */ // MSBs of SBJimms are not used by addr adder. 
- wire [31:0] Simm = {{21{instr[31]}}, instr[30:25],instr[11:7]};
- wire [31:0] Bimm = {{20{instr[31]}}, instr[7],instr[30:25],instr[11:8],1'b0};
- wire [31:0] Jimm = {{12{instr[31]}}, instr[19:12],instr[20],instr[30:21],1'b0};
- /* verilator lint_on UNUSED */
+	// The five immediate formats, see RiscV reference (link above), Fig. 2.4 p. 12
+	wire [31:0]   Uimm = {    instr[31],   instr[30:12], {12{1'b0}}};
+	wire [31:0]   Iimm = {{21{instr[31]}}, instr[30:20]};
+	/* verilator lint_off UNUSED */ // MSBs of SBJimms are not used by addr adder. 
+	wire [31:0]   Simm = {{21{instr[31]}}, instr[30:25],instr[11:7]};
+	wire [31:0]   Bimm = {{20{instr[31]}}, instr[7],instr[30:25],instr[11:8],1'b0};
+	wire [31:0]   Jimm = {{12{instr[31]}}, instr[19:12],instr[20],instr[30:21],1'b0};
+	/* verilator lint_on UNUSED */
 
    // Base RISC-V (RV32I) has only 10 different instructions !
    wire isLoad    =  (instr[6:2] == 5'b00000); // rd <- mem[rs1+Iimm]
@@ -414,4 +414,3 @@ endmodule
 // [2] state uses 1-hot encoding (at any time, state has only one bit set to 1).
 // It uses a larger number of bits (one bit per state), but often results in
 // a both more compact (fewer LUTs) and faster state machine.
-

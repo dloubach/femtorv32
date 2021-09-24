@@ -17,8 +17,7 @@ icesugar_nano.show:
 	nextpnr-ice40 $(NEXTPNR_ICESUGAR_NANO_OPT) --gui
 
 icesugar_nano.prog:
-	# doesn't work yet
-	iceprog -d "i:0x1d50:0x602b" $(PROJECTNAME).bin
+	icesprog $(PROJECTNAME).bin
 
 
 icesugar_nano.firmware_config:

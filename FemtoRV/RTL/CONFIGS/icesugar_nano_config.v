@@ -1,4 +1,4 @@
-// Default femtosoc configuration file for IceStick
+// Default femtosoc configuration file for icesugar-nano
 
 /************************* Devices **********************************************************************************/
 
@@ -23,7 +23,7 @@
 
 
 `define NRV_FEMTORV32_QUARK
-`define NRV_FREQ 50                 // Validated at 50 MHz on the IceStick. Can overclock to 70 MHz.
+`define NRV_FREQ 12                 // Validating on icesugar-nano
 `define NRV_RESET_ADDR 32'h00820000 // Jump execution to SPI Flash (800000h, +128k(20000h) for FPGA bitstream)
 `define NRV_COUNTER_WIDTH 24        // Number of bits in cycles counter
 `define NRV_TWOLEVEL_SHIFTER        // Faster shifts

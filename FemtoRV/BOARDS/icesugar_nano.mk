@@ -19,7 +19,6 @@ icesugar_nano.show:
 icesugar_nano.prog:
 	icesprog $(PROJECTNAME).bin
 
-
 icesugar_nano.firmware_config:
 	BOARD=icesugar_nano TOOLS/make_config.sh -DICE_SUGAR_NANO 
 	(cd FIRMWARE; make libs)

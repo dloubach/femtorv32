@@ -43,7 +43,7 @@
 
 `ifdef RV_DEBUG_ICESUGAR_NANO
 module led_blink(  
-					 input  clk,
+                input  clk,
                 output led
                 );
    reg [25:0] 			  counter;
@@ -635,9 +635,9 @@ end
 `ifdef RV_DEBUG_ICESUGAR_NANO
 	led_blink 
 	  my_debug_led(
-						.clk(pclk),     // clock signal
-						.led(board_led) // yellow led in the icesugar-nano board v1.2
-						);
+                  .clk(pclk),     // clock signal
+                  .led(board_led) // yellow led in the icesugar-nano board v1.2
+                  );
 `endif
 	/* ************************************************************************************* */
 	

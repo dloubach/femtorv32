@@ -147,7 +147,7 @@ FEMTORV32_LIBS_SMALL=-L$(RVTOOLCHAIN_LIB_DIR)\
 # for icesugar-nano we use the 'icesprog'
 # firwmare SPI FLASH address starts in 128k
 %.sprog: %.spiflash.bin
-	icesprog -o 0x00020000 $<
+	icesprog -w -o 0x00020000 $<
 
 # Generate a disassembly (for inspection if need be)
 %.list: %.baremetal.elf
